@@ -1,0 +1,44 @@
+### Node / Frontend ###
+node_modules/
+dist/
+build/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+pnpm-lock.yaml
+package-lock.json
+
+# local env files
+.env
+.env.*
+.env.local
+.env.*.local
+
+### Java / Backend ###
+target/
+build/
+.mvn/
+*.class
+
+### IDEs / editors ###
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+### OS ###
+.DS_Store
+Thumbs.db
+
+### Logs ###
+*.log
+
+### Misc ###
+/.history/
+/.cache/
+
+# If you keep any generated archives or OS-specific files
+*.zip
+*.tar.gz
