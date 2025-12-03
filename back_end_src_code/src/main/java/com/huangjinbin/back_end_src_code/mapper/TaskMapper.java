@@ -25,7 +25,7 @@ SELECT
     COALESCE(th.submitted_count, 0) AS participants,
     COALESCE(th.heat_index, 0) AS heat
 FROM task_g t
-LEFT JOIN task_submission_heat_g th ON t.id = th.task_id
+LEFT JOIN task_submission_heat th ON t.id = th.task_id
 """)
     List<TaskListResponseDTO> selectTaskList();
 
@@ -58,7 +58,7 @@ SELECT
         ELSE 0 
     END), 0) AS week,
     COALESCE(SUM(th.heat_index), 0) AS total
-FROM task_submission_heat_g th
+FROM task_submission_heat th
 """)
     Map<String, Object> selectHeatDataStat();
 
@@ -109,4 +109,5 @@ WHERE t.id = #{id}
 GROUP BY team.id
 """)
     Map<String, Object> selectTeamProcess(@Param("id") Long id);
+
 }
