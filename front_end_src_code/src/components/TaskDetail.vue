@@ -87,13 +87,87 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import TeamTaskPanel from "../components/TeamTaskPanel.vue";
 import PersonalTaskPanel from "../components/PersonalTaskPanel.vue";
 import ExcellentWorkPanel from "../components/ExcellentWorkPanel.vue";
 import AiChatPanel from "../components/AiChatPanel.vue";
 import { loadDetailTask } from "../api/task.js";
+
+const route = useRoute();
+const router = useRouter();
+const taskId = ref(route.params.id);
+
+const activeTab = ref("team");
+const task = ref({
+  id: taskId.value,
+  title: "",
+  description: "",
+  type: "",
+  deadline: "",
+  createTime: "",
+  status: "",
+  participants: 0,
+  difficulty: 3,
+});
+
+// 加载任务详情
+const loadTaskDetail = async (id) => {
+  try {
+    if (!id) {
+      console.error('任务ID为空');
+      return;
+    }
+  
+    const response = await loadDetailTask(id);
+    
+    
+    // 确保数据正确合并，不要覆盖整个对象
+    if (response) {
+      console.log("API返回数据:", response);
+      // 只更新必要的字段，保持原有结构
+      task.value = response.detailTask;
+      console.log("task数据:", task);
+    }
+  } catch (error) {
+    console.error("加载任务详情失败:", error);
+    // 可以显示错误信息给用户
+  }
+};
+
+// 监听路由参数变化
+watch(() => route.params.id, (newId) => {
+  console.log("路由ID变化:", newId);
+  if (newId) {
+    taskId.value = newId;
+    loadTaskDetail(newId);
+  }
+}, { immediate: true });
+
+// 初始化加载
+onMounted(() => {
+  console.log("组件挂载，当前ID:", taskId.value);
+  if (taskId.value) {
+    loadTaskDetail(taskId.value);
+  }
+});
+
+/* // 调试：打印响应式变量变化
+watch(task, (newValue) => {
+  console.log("task数据更新:", newValue);
+}, { deep: true }); */
+
+
+
+/*
+import { ref, onMounted, onUnmounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import TeamTaskPanel from "../components/TeamTaskPanel.vue";
+import PersonalTaskPanel from "../components/PersonalTaskPanel.vue";
+import ExcellentWorkPanel from "../components/ExcellentWorkPanel.vue";
+import AiChatPanel from "../components/AiChatPanel.vue";
+import { loadDetailTask } from "../api/index.js";
 import mitt from "mitt";
 
 // 使用统一的 mitt 实例
@@ -146,7 +220,7 @@ onMounted(() => {
 onUnmounted(() => {
   // 取消事件监听
   emitter.off("loadDTask", handleLoadTask);
-});
+}); */
 </script>
 
 <style scoped>

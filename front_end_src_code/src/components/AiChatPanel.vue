@@ -155,26 +155,7 @@
           </div>
         </el-card>
 
-        <!-- 学习资源 -->
-        <el-card class="sidebar-card">
-          <template #header>
-            <div class="card-header">
-              <span>学习资源</span>
-            </div>
-          </template>
-          <div class="resources-list">
-            <div
-              v-for="resource in learningResources"
-              :key="resource.id"
-              class="resource-item"
-              @click="openResource(resource)"
-            >
-              <el-icon><component :is="resource.icon" /></el-icon>
-              <span class="resource-title">{{ resource.title }}</span>
-              <el-tag :type="resource.type" size="small">{{ resource.tag }}</el-tag>
-            </div>
-          </div>
-        </el-card>
+        
       </el-col>
     </el-row>
   </div>

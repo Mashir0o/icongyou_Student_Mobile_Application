@@ -21,7 +21,7 @@ import java.util.Map;
  * 处理所有/task/*路径的请求，对应接口文档1-6
  */
 @RestController
-@RequestMapping("/task")
+@RequestMapping("/api/task")
 public class TaskController {
 
     @Autowired
@@ -34,11 +34,13 @@ public class TaskController {
      */
     @GetMapping("/loadTaskList")
     public Result<List<TaskListResponseDTO>> loadTaskList() {
+
         // 1. 获取任务列表数据
         List<TaskListResponseDTO> tasks = taskService.loadTaskList();
 
         // 2. 直接将列表作为 data 传入 Result.success()
         return Result.success(tasks);
+
     }
 
     /**

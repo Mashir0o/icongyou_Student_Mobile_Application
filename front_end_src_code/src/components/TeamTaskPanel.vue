@@ -144,90 +144,7 @@
       </el-col>
     </el-row>
 
-    <!-- 团队任务分配 -->
-    <el-card class="task-assignment">
-      <template #header>
-        <div class="card-header">
-          <span>任务分配</span>
-          <el-button
-            type="primary"
-            :icon="Plus"
-            @click="openNewTaskDialog" 
-            >分配任务</el-button
-          >
-        </div>
-      </template>
- <!-- 新增对话框区域 -->
-    <NewTask 
-      v-if="showNewTask" 
-      :visible="showNewTask"
-      :team-members="teamMembers"
-      @task-created="handleTaskCreated"
-    />
 
-      <el-table
-        :data="teamTasks"
-        style="width: 100%"
-      >
-        <el-table-column
-          prop="title"
-          label="任务名称"
-          width="200"
-        />
-        <el-table-column
-          label="负责人"
-          width="120"
-        >
-          <template #default="scope">
-            <div class="assignee">
-              <el-avatar
-                :size="24"
-                :src="scope.row.assignee.avatar"
-              />
-              <span>{{ scope.row.assignee.name }}</span>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="deadline"
-          label="截止时间"
-          width="120"
-        />
-        <el-table-column
-          label="优先级"
-          width="100"
-        >
-          <template #default="scope">
-            <el-tag :type="getPriorityType(scope.row.priority)">
-              {{ scope.row.priority }}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="状态"
-          width="100"
-        >
-          <template #default="scope">
-            <el-tag :type="getStatusType(scope.row.status)">
-              {{ scope.row.status }}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="操作"
-          width="120"
-        >
-          <template #default="scope">
-            <el-button
-              type="primary"
-              link
-              :icon="Edit"
-              >编辑</el-button
-            >
-          </template>
-        </el-table-column>
-      </el-table>
-    </el-card>
   </div>
 </template>
 
@@ -236,21 +153,6 @@ import { ref, computed, onMounted } from "vue";
 import { Plus, Edit, Check, Clock, Warning } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
 import { loadTeamMembers, loadTeamProcess } from "../api/task.js";
-import NewTask from "./NewTask.vue";
-
-// 新增响应式变量
-const showNewTask = ref(false)
-
-// 控制对话框显示
-const openNewTaskDialog = () => {
-  showNewTask.value = true
-}
-
-// 处理任务创建事件
-const handleTaskCreated = (formData) => {
-  console.log('新任务数据:', formData)
-  // 此处可添加保存到后端的逻辑
-}
 
 const props = defineProps({
   taskId: {
@@ -313,8 +215,8 @@ const loadTeamMember = async () => {
     teamMembers.value = res.teamMembers;
     
   } catch (error) {
-    console.error('加载团队成员失败:', error);
-    ElMessage.error('加载团队成员失败');
+
+    ElMessage.warning('加载团队成员失败，本任务为个人任务');
   }
 };
 
@@ -329,8 +231,8 @@ const loadTeamP = async () => {
     pendingTasks.value = res.pendingTasks;
 
   } catch (error) {
-    console.error('加载团队进度失败:', error);
-    ElMessage.error('加载团队进度失败');
+
+    ElMessage.warning('加载团队进度失败，本任务为个人任务');
   }
 };
 

@@ -123,7 +123,13 @@
           <template #header>
             <div class="card-header">
               <span>任务列表</span>
-  
+              <el-button
+                type="primary"
+                :icon="Plus"
+                @click="goToNewTask"
+              >
+                新建任务
+              </el-button>
             </div>
           </template>
 
@@ -215,7 +221,7 @@
 
 <script setup>
 import { ref,watch,onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { ElMessage, ElIcon } from "element-plus";
 import {
   TrendCharts,
@@ -224,12 +230,12 @@ import {
   View,
   Document,
 } from "@element-plus/icons-vue";
-import { LoadTaskList ,loadHeatData,loadDataView} from "../api/task.js";
+import { LoadTaskList ,loadHeatData,loadDataView} from "D:/Code/javaweb/icongyou_student_mobile_application/front_end_src_code/src/api/task.js";
 import mitt from "mitt";
 
 const emitter = mitt();
 const router = useRouter();
-
+const route = useRoute();
 // 响应式数据
 const heatData = ref({
   today: 85,
@@ -328,11 +334,14 @@ const handleTaskClick = (row) => {
 };
 
 const goToTaskDetail = (taskId) => {
-  emitter.emit("loadDTask", taskId);
-  router.push(`/courses/tasks/${taskId}`);
+  //emitter.emit("loadDTask", taskId);
+  const courseId = route.params.id;
+  router.push(`/courses/${courseId}/task/${taskId}`);
 };
 
-
+const goToNewTask = () => {
+  router.push('/task/new')
+}
 
 
 
@@ -341,19 +350,23 @@ const goToTaskDetail = (taskId) => {
 <style scoped>
 .task-center {
   min-height: 100vh;
-  background-color: #f5f7fa;
+  background-color: #5290ef;
 }
 
 .page-header {
-  display: flex;
-  align-items: center;
+display: flex;
+  justify-content: center; /* 新增：水平居中 */
+  align-items: center; /* 新增：垂直居中 */
   background: white;
   border-bottom: 1px solid #e4e7ed;
+  text-align: center; /* 新增：文字居中 */
 }
 
 .page-header h1 {
   margin: 0;
-  color: #303133;
+  color: #409EFF; /* 修改：改为蓝色 */
+  font-size: 28px; /* 可选：增大字体 */
+  font-weight: 600; /* 可选：加粗字体 */
 }
 
 .dashboard {

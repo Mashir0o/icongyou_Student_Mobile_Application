@@ -11,7 +11,7 @@
       <div class="top-tabs">
           <van-button size="small" plain :class="{active: activeTab===0}" @click="activeTab=0">课程详情</van-button>
           <van-button size="small" plain :class="{active: activeTab===1}" @click="activeTab=1">课程资料</van-button>
-          <van-button size="small" plain :class="{active: activeTab===2}" @click="activeTab=2">任务中心</van-button>
+          <van-button size="small" plain :class="{active: activeTab===2}" @click="switchToTaskTab">任务中心</van-button>
           <van-button size="small" plain :class="{active: activeTab===3}" @click="activeTab=3">个人数据</van-button>
       </div>
         <div class="top-tabs-placeholder" aria-hidden="true"></div>
@@ -97,7 +97,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { getCourse } from '@/api/courses'
 import defaultImg from '@/assets/logo.png'
 import PersonalPanel from '@/views/courses/components/PersonalPanel.vue'
-import TaskCenter from 'D:/Code/javaweb/icongyou_student_mobile_application/front_end_src_code/src/components/TaskCenter.vue'
+import TaskCenter from 'D:/Code/javaweb/icongyou_student_mobile_application/front_end_src_code/src/views/courses/components/TaskCenter.vue'
 import CourseMaterials from '@/views/courses/components/CourseMaterials.vue'
 
 export default {
@@ -120,7 +120,19 @@ export default {
       return route.params && route.params.id ? route.params.id : null
     })
 
-    const activeTab = ref(0)
+
+
+    //添加跳转任务中心的跳转函数
+    const switchToTaskTab = () => {
+      // 使用路由参数中的 id
+      const { id } = route.params
+      if (id) {
+        router.push(`/courses/${id}/task`)
+      } else {
+        console.error('Route parameter id is not available.')
+      }
+    }
+
 
     if (route.name === 'course-tasks' || (route.query && route.query.tab === 'tasks')) {
       activeTab.value = 2
@@ -131,6 +143,16 @@ export default {
         activeTab.value = 2
       }
     })
+
+     // 原有的逻辑保持不变，但需要修改 activeTab 的初始化
+    // 根据当前路由决定是否默认显示任务中心
+    const shouldShowTaskTab = route.name === 'course-tasks' || route.path.includes('/course/') && route.path.includes('/task')
+    const activeTab = ref(shouldShowTaskTab ? 2 : 0)
+
+    // 如果路由参数中有 tab 查询参数，也考虑进去
+    if (route.query && route.query.tab === 'tasks') {
+      activeTab.value = 2
+    }
 
     const teacherName = computed(() => {
       if (course.value && course.value._teacherName) return course.value._teacherName
@@ -189,7 +211,7 @@ export default {
         activeTab.value = 2
     }
 
-    return { course, defaultCover, goBack, teacherName, formatDate, panelCourseId, openTasks, activeTab, statusLabel, typeLabel }
+    return { course, defaultCover, goBack, teacherName, formatDate, panelCourseId, openTasks, activeTab, statusLabel, typeLabel, switchToTaskTab }
   }
 }
 </script>

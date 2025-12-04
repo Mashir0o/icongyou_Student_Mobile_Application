@@ -1,5 +1,7 @@
 
+import { componentSizes } from 'element-plus'
 import { createRouter, createWebHistory } from 'vue-router'
+
 // auth 模块下的登录/注册页面
 const Login = () => import(/* webpackChunkName: "login" */ '../views/auth/Login.vue')
 const Register = () => import(/* webpackChunkName: "register" */ '../views/auth/Register.vue')
@@ -7,6 +9,7 @@ const Courses = () => import(/* webpackChunkName: "courses" */ '../views/courses
 const CourseDetail = () => import(/* webpackChunkName: "course-detail" */ '../views/courses/components/CourseDetail.vue')
 const TaskCenter = () => import(/* webpackChunkName: "task-center" */ '../views/courses/components/TaskCenter.vue')
 const TaskDetail = () => import(/* webpackChunkName: "task-detail" */ '../components/TaskDetail.vue')
+const NewTask = () => import(/* webpackChunkName: "new-task" */ '../components/NewTask.vue')
 
 const routes = [
   {
@@ -25,16 +28,26 @@ const routes = [
     props: true
   },
   {
-    path: '/courses/:id/tasks',
+    path: '/courses/:id/task',
     name: 'course-tasks',
     component: TaskCenter,
     props: true
   },
   {
-    path: '/courses/tasks/:id',
+    path: '/courses/:id/task/:id',
     name: 'course-tasks-detail',
     component: TaskDetail,
-    props: true
+    props: true,
+    meta: {
+      title: '任务详情 - 学习平台'
+      // 移除了 requireAuth: true
+    }
+  },
+  {
+    path: '/task/new',
+    name: 'new-task',
+    component: NewTask,
+    props: true,
   },
   {
     path: '/login',
